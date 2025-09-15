@@ -357,7 +357,6 @@ export default function Dashboard() {
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
       <div className="container mx-auto px-4 md:px-10 text-gray-700">
-
         {(userRole === "admin" || userRole === "auditor") ? (
           <>
             {/* --- Full Dashboard View for Admin/Auditor --- */}
@@ -543,12 +542,10 @@ export default function Dashboard() {
                   <YAxis allowDecimals={false} tick={{ fontSize: 14, fill: "#222" }} label={{ value: "Count", angle: -90, position: "insideLeft", offset: 15, fontWeight: "bold", fontSize: 16, fill: "#555" }} />
                   <Tooltip />
                   <Legend verticalAlign="top" align="right" />
-
                   {/* Open category bars */}
                   <Bar dataKey="openMinor" fill="#2b72b8" name="Open Minor" barSize={16} onClick={handleBarClick} />
                   <Bar dataKey="openMajor" fill="#e94560" name="Open Major" barSize={16} onClick={handleBarClick} />
                   <Bar dataKey="openObservation" fill="#ffd460" name="Open Observation" barSize={16} onClick={handleBarClick} />
-
                   {/* Closed category bars */}
                   <Bar dataKey="closedMinor" fill="#1560bd" name="Closed Minor" barSize={16} onClick={handleBarClick} />
                   <Bar dataKey="closedMajor" fill="#b22222" name="Closed Major" barSize={16} onClick={handleBarClick} />
@@ -559,80 +556,80 @@ export default function Dashboard() {
           </>
         ) : (
           <>
-            {/* Limited dashboard for regular users: show only Reported and Open Non-Conformities Pie Charts */}
-
-            {/* Reported Nonconformities Pie Chart */}
-            <div className="bg-white rounded-xl shadow-xl p-5 flex-1 min-w-0 mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <motion.h2 className="text-2xl font-semibold">Reported Non-Conformities</motion.h2>
-                <select className="border rounded px-2 py-1 text-sm min-w-0 max-w-[120px]" value={ncDropdown} onChange={(e) => setNcDropdown(e.target.value)} aria-label="Filter Reported Nonconformities">
-                  <option value="all">All Years</option>
-                  {ncYears.map((year) => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
-              </div>
-              <ResponsiveContainer width="100%" height={360}>
-                <PieChart>
-                  <Pie
-                    data={safePieData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    innerRadius={50}
-                    paddingAngle={6}
-                    dataKey="value"
-                    nameKey="name"
-                    label={({ name, value }) => (value > 0 ? `${name}: ${Math.round(value)}` : "")}
-                    isAnimationActive
-                    stroke="#333"
-                    strokeWidth={2}
-                    onClick={(data) => handlePieClick(data.name)}
-                  >
-                    {safePieData.map((entry, idx) => (
-                      <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} style={{ cursor: "pointer" }} />
+            {/* Limited dashboard for regular users: show Reported and Open Non-Conformities Pie Charts side-by-side */}
+            <div className="flex flex-col md:flex-row gap-8 mb-8">
+              {/* Reported Nonconformities Pie Chart */}
+              <div className="bg-white rounded-xl shadow-xl p-5 flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-4">
+                  <motion.h2 className="text-2xl font-semibold">Reported Non-Conformities</motion.h2>
+                  <select className="border rounded px-2 py-1 text-sm min-w-0 max-w-[120px]" value={ncDropdown} onChange={(e) => setNcDropdown(e.target.value)} aria-label="Filter Reported Nonconformities">
+                    <option value="all">All Years</option>
+                    {ncYears.map((year) => (
+                      <option key={year} value={year}>{year}</option>
                     ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Open Nonconformities Pie Chart */}
-            <div className="bg-white rounded-xl shadow-xl p-5 flex-1 min-w-0 mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <motion.h2 className="text-2xl font-semibold">Open Non-Conformities</motion.h2>
-                <select className="border rounded px-2 py-1 text-sm min-w-0 max-w-[120px]" value={openNcDropdown} onChange={(e) => setOpenNcDropdown(e.target.value)} aria-label="Filter Open Nonconformities">
-                  <option value="all">All Years</option>
-                  {openNcYears.map((year) => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
+                  </select>
+                </div>
+                <ResponsiveContainer width="100%" height={360}>
+                  <PieChart>
+                    <Pie
+                      data={safePieData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      innerRadius={50}
+                      paddingAngle={6}
+                      dataKey="value"
+                      nameKey="name"
+                      label={({ name, value }) => (value > 0 ? `${name}: ${Math.round(value)}` : "")}
+                      isAnimationActive
+                      stroke="#333"
+                      strokeWidth={2}
+                      onClick={(data) => handlePieClick(data.name)}
+                    >
+                      {safePieData.map((entry, idx) => (
+                        <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} style={{ cursor: "pointer" }} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-              <ResponsiveContainer width="100%" height={360}>
-                <PieChart>
-                  <Pie
-                    data={safeOpenPieData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    innerRadius={50}
-                    paddingAngle={6}
-                    dataKey="value"
-                    nameKey="name"
-                    label={({ name, value }) => (value > 0 ? `${name}: ${Math.round(value)}` : "")}
-                    isAnimationActive
-                    stroke="#333"
-                    strokeWidth={2}
-                    onClick={(data) => handleOpenPieClick(data.name)}
-                  >
-                    {safeOpenPieData.map((entry, idx) => (
-                      <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} style={{ cursor: "pointer" }} />
+              {/* Open Nonconformities Pie Chart */}
+              <div className="bg-white rounded-xl shadow-xl p-5 flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-4">
+                  <motion.h2 className="text-2xl font-semibold">Open Non-Conformities</motion.h2>
+                  <select className="border rounded px-2 py-1 text-sm min-w-0 max-w-[120px]" value={openNcDropdown} onChange={(e) => setOpenNcDropdown(e.target.value)} aria-label="Filter Open Nonconformities">
+                    <option value="all">All Years</option>
+                    {openNcYears.map((year) => (
+                      <option key={year} value={year}>{year}</option>
                     ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+                  </select>
+                </div>
+                <ResponsiveContainer width="100%" height={360}>
+                  <PieChart>
+                    <Pie
+                      data={safeOpenPieData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      innerRadius={50}
+                      paddingAngle={6}
+                      dataKey="value"
+                      nameKey="name"
+                      label={({ name, value }) => (value > 0 ? `${name}: ${Math.round(value)}` : "")}
+                      isAnimationActive
+                      stroke="#333"
+                      strokeWidth={2}
+                      onClick={(data) => handleOpenPieClick(data.name)}
+                    >
+                      {safeOpenPieData.map((entry, idx) => (
+                        <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} style={{ cursor: "pointer" }} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </>
         )}
@@ -640,4 +637,7 @@ export default function Dashboard() {
     </motion.div>
   );
 }
+
+
+
 
